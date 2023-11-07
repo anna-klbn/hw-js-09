@@ -1,3 +1,7 @@
+import flatpickr from 'flatpickr';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/dark.css';
 
 const refs = {
   inputDate: document.querySelector('#datetime-picker'),
@@ -48,3 +52,42 @@ const options = {
   },
 };
 
+class Timer {
+  constructor() {
+    this.timerID = null;
+    this.isActive = false;
+    refs.startBtn.disabled = true;
+  }
+
+  startTimer() {
+    if (this.isActive) {
+      return;
+    }
+
+    this.isActive = true;
+    this.timerID = setInterval(() => {
+      const currentTime = Date.now();
+      const deltaTime = selectedTime - currentTime;
+      const componentsTimer = convertMs(deltaTime);
+      this.updateComponentsTimer(componentsTimer);
+      if (deltaTime <= 0) {
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+
+  updateComponentsTimer({ days, hours, minutes, seconds }) {
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.minutes.textContent = minutes;
+    refs.seconds.textContent = seconds;
+  }
+
+  stopTimer() {
+    clearInterval(this.timerID);
+  }
+}
+
+const timer = new Timer();
+flatpickr(refs.inputDate, options);
+refs.startBtn.addEventListener('click', () => timer.startTimer());
