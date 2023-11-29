@@ -1,4 +1,4 @@
-
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const setbackInput = document.querySelector('input[name="delay"]');
 const stepSetbackInput = document.querySelector('input[name="step"]');
@@ -24,8 +24,8 @@ function start(evt) {
   let position = amountInput.value;
   console.log({'position': position, 'delay': delay, 'stepDelay': stepDelay})
   setTimeout(() => {
-    clearInterval(timerId);
-    timerId = setInterval(() => {
+    clearInterval(timer);
+    timer = setInterval(() => {
 
       createPromise(position, stepDelay)
         .then(({ position, delay }) => {
@@ -37,7 +37,7 @@ function start(evt) {
           Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
         });
       position--;
-      if (position === 0) { clearInterval(timerId); }
+      if (position === 0) { clearInterval(timer); }
     }, stepDelay)
   }, delay);
 }
